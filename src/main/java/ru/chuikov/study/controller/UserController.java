@@ -4,6 +4,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -97,4 +98,39 @@ public class UserController {
         }
         return new ResponseEntity<Map>(Collections.singletonMap("message", "ok"), HttpStatus.CREATED);
     }
+
+    @PostMapping(value = "/deleteUser/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity deleteUser(@PathVariable("id") String id,@AuthenticationPrincipal User user){
+        try {
+            userService.deleteUserById(Long.parseLong(id));
+            return new ResponseEntity<Map>(Collections.singletonMap("message","ok"),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Map>(Collections.singletonMap("message",e.getMessage()),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/changeUserRole/{id}/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity changeUserRoleToAdmin(@PathVariable("id") String id,@AuthenticationPrincipal User user){
+        try {
+            userService.changeUserRoleTo(Long.parseLong(id), Role.ADMIN);
+        } catch (Exception e) {
+            return new ResponseEntity<Map>(Collections.singletonMap("message", e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Map>(Collections.singletonMap("message", "ok"), HttpStatus.OK);
+
+    }
+
+    @PostMapping(value = "/changeUserRole/{id}/user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity changeUserRoleToUser(@PathVariable("id") String id,@AuthenticationPrincipal User user){
+        try {
+            userService.deleteUserById(Long.parseLong(id));
+            return new ResponseEntity<Map>(Collections.singletonMap("message","ok"),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Map>(Collections.singletonMap("message",e.getMessage()),HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

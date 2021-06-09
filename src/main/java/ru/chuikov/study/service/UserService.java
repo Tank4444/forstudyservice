@@ -2,6 +2,7 @@ package ru.chuikov.study.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import ru.chuikov.study.entity.Role;
 import ru.chuikov.study.entity.User;
 import ru.chuikov.study.entity.UserStatus;
 
@@ -18,4 +19,6 @@ public interface UserService extends UserDetailsService {
     boolean emailBusy(String email);
     boolean usernameBusy(String username);
     void changeUserStatusTo(User user, UserStatus status) throws Exception;
+    void deleteUserById(Long id)throws Exception;
+    void changeUserRoleTo(Long id, Role role) throws Exception;
 }

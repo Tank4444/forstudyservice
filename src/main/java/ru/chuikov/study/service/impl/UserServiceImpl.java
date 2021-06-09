@@ -3,10 +3,12 @@ package ru.chuikov.study.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.chuikov.study.entity.Role;
 import ru.chuikov.study.entity.User;
 import ru.chuikov.study.entity.UserStatus;
 import ru.chuikov.study.repository.UserRepository;
@@ -94,6 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void changeUserStatusTo(User user, UserStatus status) throws Exception {
         User acc=getUserById(user.getId());
         if(acc.getUserStatus()!=status)
@@ -102,6 +105,23 @@ public class UserServiceImpl implements UserService {
             userRepository.saveAndFlush(acc);
         }else throw new Exception("user status is the same");
     }
+
+    @Override
+    public void deleteUserById(Long id) throws Exception {
+        userRepository.delete(getUserById(id));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void changeUserRoleTo(Long id, Role role) throws Exception {
+        User acc=getUserById(id);
+        if(acc.getRole()!=role)
+        {
+            acc.setRole(role);
+            userRepository.saveAndFlush(acc);
+        }else throw new Exception("user role is the same");
+    }
+
 }
 
 

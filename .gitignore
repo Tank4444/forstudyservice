@@ -55,3 +55,8 @@ hs_err_pid*
 ###Properties
 *.properties
 
+###Log
+log.*
+
+src/test/
+target/generated-sources/
