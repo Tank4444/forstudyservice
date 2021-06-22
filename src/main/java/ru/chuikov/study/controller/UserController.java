@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/user",headers = {"X-API-VERSION=1"})
 public class UserController {
 
     @Autowired
